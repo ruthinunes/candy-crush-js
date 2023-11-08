@@ -1,28 +1,88 @@
 const board = document.querySelector(".board");
 const width = 8;
-const candies = ["Blue", "Green", "Orange", "Purple", "Red", "Yellow"];
-let randomCandies = [];
+const colors = ["Blue", "Green", "Orange", "Purple", "Red", "Yellow"];
+let selectedColor = null;
+let selectedColorIndex = null;
+let randomColors = [];
 
 window.onload = () => startGame();
 
-getRandomCandies = () => {
+getRandomColors = () => {
   for (let i = 0; i < width * width; i++) {
-    const randomCandy = candies[Math.floor(Math.random() * candies.length)];
-    randomCandies.push(randomCandy);
+    const randomcolor = colors[Math.floor(Math.random() * colors.length)];
+    randomColors.push(randomcolor);
   }
 };
 
-startGame = () => {
-  getRandomCandies();
+createBoard = () => {
+  getRandomColors();
 
-  randomCandies.forEach((candy, index) => {
+  randomColors.forEach((color, index) => {
     card = document.createElement("img");
-    card.classList.add("cell");
-    card.setAttribute("data-id", index);
-    card.setAttribute("src", "./images/" + candy + ".png");
+    card.classList.add("card");
+    card.setAttribute("id", index);
+    card.setAttribute("src", "./images/" + color + ".png");
+    card.setAttribute("draggable", true);
+    card.setAttribute("alt", color);
     board.append(card);
 
-    // card.addEventListener("click", dragStart);
+    // Event listeners for cards
+    card.addEventListener("dragstart", () => dragStart(color, index));
+    card.addEventListener("dragover", (e) => dragOver(index, e));
+    card.addEventListener("dragenter", () => dragEnter(index));
+    card.addEventListener("dragleave", () => dragLeave(index));
+    card.addEventListener("dragend", () => dragEnd(index));
+    card.addEventListener("drop", () => dragDrop(index));
   });
-  console.log(board);
+};
+
+startGame = () => {
+  createBoard();
+};
+
+dragStart = (color, index) => {
+  selectedColorIndex = index;
+  selectedColor = color;
+  // console.log(selectedColor, selectedColorIndex);
+};
+
+dragOver = (index, e) => {
+  e.preventDefault();
+  // console.log(index, "dragOver");
+};
+
+dragEnter = (index) => {
+  // console.log(index, "dragEnter");
+};
+
+dragLeave = (index) => {
+  // console.log(index, "dragLeave");
+};
+
+dragEnd = (index) => {
+  // console.log(index, "dragEnd");
+};
+
+dragDrop = (index) => {
+  if (selectedColor !== null) {
+    // switch colors
+    const tempIndex = randomColors[selectedColorIndex];
+
+    randomColors[selectedColorIndex] = randomColors[index];
+    randomColors[index] = tempIndex;
+    updateBoard();
+
+    // cleaning variables
+    selectedColor = null;
+    selectedColorIndex = null;
+  }
+};
+
+updateBoard = () => {
+  const cards = document.querySelectorAll(".card");
+  cards.forEach((card, index) => {
+    const color = randomColors[index];
+    card.setAttribute("src", "./images/" + color + ".png");
+    card.setAttribute("alt", color);
+  });
 };
