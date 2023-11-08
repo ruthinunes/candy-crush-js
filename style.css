@@ -14,17 +14,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: url('./background.jpg') no-repeat center fixed;
+  background-size: cover;
+  text-align: center;
 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
 }
 
 .board {
@@ -34,7 +30,14 @@ code {
   gap: 5px;
 }
 
-@media screen and (min-width: 500px) {
+.cell {
+  /* width: 50px; Tamanho de cada célula */
+  /* height: 50px; Tamanho de cada célula */
+  /* background-color: #ccc; Cor de fundo da célula (pode ser alterada) */
+
+}
+
+/* @media screen and (min-width: 500px) {
   .board {
     grid-template-columns: repeat(8, 60px);
     grid-template-rows: repeat(8, 60px);
@@ -48,4 +51,4 @@ code {
     grid-template-rows: repeat(8, 70px);
     gap: 10px;
   }
-}
+} */
