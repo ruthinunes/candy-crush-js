@@ -1,16 +1,20 @@
 const board = document.querySelector(".board");
 const width = 8;
-const candyColors = ["blue", "green", "orange", "purple", "red", "yellow"];
+const candies = ["Blue", "Green", "Orange", "Purple", "Red", "Yellow"];
 let randomCandies = [];
 
-console.log(board);
-for (let i = 0; i < width * width; i++) {
-  const randomCandy =
-    candyColors[Math.floor(Math.random() * candyColors.length)];
-  randomCandies.push(randomCandy);
-}
-console.log(randomCandies);
-randomCandies.forEach((candy) => {
-  document.createElement("div").className = "";
-  console.log(candy);
-});
+window.onload = () => startGame();
+
+startGame = () => {
+  for (let i = 0; i < width * width; i++) {
+    const randomCandy = candies[Math.floor(Math.random() * candies.length)];
+    randomCandies.push(randomCandy);
+  }
+  randomCandies.forEach((candy, index) => {
+    card = document.createElement("img");
+    card.classList.add("cell");
+    card.setAttribute("data-id", index);
+    card.setAttribute("src", "./images/" + candy + ".png");
+    board.append(card);
+  });
+};

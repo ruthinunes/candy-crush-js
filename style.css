@@ -15,7 +15,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: url('./background.jpg') no-repeat center fixed;
+  background: url("./background.jpg") no-repeat center fixed;
   background-size: cover;
   text-align: center;
 
@@ -29,16 +29,15 @@ body {
   height: 450px;
   background-color: lightblue;
   border: 2px solid slategray;
-  border-radius: 15px;
+  border-radius: 10px;
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
 }
 
 .cell {
-  /* width: 50px; Tamanho de cada célula */
-  /* height: 50px; Tamanho de cada célula */
-  /* background-color: #ccc; Cor de fundo da célula (pode ser alterada) */
-
+  width: 50px;
+  height: 50px;
 }
 
 /* @media screen and (min-width: 500px) {
