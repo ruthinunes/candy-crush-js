@@ -25,10 +25,13 @@ body {
 }
 
 .board {
-  display: grid;
-  grid-template-columns: repeat(8, 40px);
-  grid-template-rows: repeat(8, 40px);
-  gap: 5px;
+  width: 450px;
+  height: 450px;
+  background-color: lightblue;
+  border: 2px solid slategray;
+  border-radius: 15px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .cell {
