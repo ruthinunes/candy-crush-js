@@ -29,7 +29,7 @@ createBoard = () => {
     // Event listeners for cards
     card.addEventListener("dragstart", () => dragStart(color, index));
     card.addEventListener("dragover", (e) => dragOver(index, e));
-    card.addEventListener("dragenter", () => dragEnter(index));
+    card.addEventListener("dragenter", (e) => dragEnter(index, e));
     card.addEventListener("dragleave", () => dragLeave(index));
     card.addEventListener("dragend", () => dragEnd(index));
     card.addEventListener("drop", () => dragDrop(index));
@@ -43,7 +43,6 @@ startGame = () => {
 dragStart = (color, index) => {
   selectedColorIndex = index;
   selectedColor = color;
-  // console.log(selectedColor, selectedColorIndex);
 };
 
 dragOver = (index, e) => {
@@ -51,8 +50,8 @@ dragOver = (index, e) => {
   // console.log(index, "dragOver");
 };
 
-dragEnter = (index) => {
-  // console.log(index, "dragEnter");
+dragEnter = (index, e) => {
+  e.preventDefault();
 };
 
 dragLeave = (index) => {
@@ -60,21 +59,24 @@ dragLeave = (index) => {
 };
 
 dragEnd = (index) => {
-  // console.log(index, "dragEnd");
+  // cleaning variables
+  selectedColor = null;
+  selectedColorIndex = null;
 };
 
 dragDrop = (index) => {
   if (selectedColor !== null) {
-    // switch colors
-    const tempIndex = randomColors[selectedColorIndex];
+    let validMoves = [index - 1, index - width, index + 1, index + width];
 
-    randomColors[selectedColorIndex] = randomColors[index];
-    randomColors[index] = tempIndex;
-    updateBoard();
+    if (validMoves.includes(selectedColorIndex)) {
+      // switch colors
+      const tempIndex = randomColors[selectedColorIndex];
 
-    // cleaning variables
-    selectedColor = null;
-    selectedColorIndex = null;
+      randomColors[selectedColorIndex] = randomColors[index];
+      randomColors[index] = tempIndex;
+
+      updateBoard();
+    }
   }
 };
 
