@@ -25,9 +25,26 @@ body {
 }
 
 .score {
-  margin-bottom: 4rem;
+  margin-bottom: 1rem;
   color: #1a237e;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.start {
+  margin-bottom: 2rem;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #924ba880;
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.start:hover {
+  color: #1a237e;
+  background-color: white;
 }
 
 .board {
