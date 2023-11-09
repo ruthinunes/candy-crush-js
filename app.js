@@ -13,7 +13,9 @@ window.onload = () => {
 startBtn.addEventListener("click", () =>
   window.setInterval(() => {
     crushCandies();
-  }, 300)
+    slideDown();
+    generateNewCandies();
+  }, 400)
 );
 
 getRandomcandies = () => {
@@ -136,5 +138,28 @@ checkCombination = (matrix, isBlank) => {
     randomcandies[matrix[0]] = "";
     randomcandies[matrix[1]] = "";
     randomcandies[matrix[2]] = "";
+    slideDown();
   }
+};
+
+slideDown = () => {
+  for (let i = 0; i < width * width - width; i++) {
+    if (randomcandies[i + width] === "") {
+      const temp = randomcandies[i];
+      randomcandies[i] = randomcandies[i + width];
+      randomcandies[i + width] = temp;
+    }
+  }
+
+  updateBoard();
+};
+
+generateNewCandies = () => {
+  for (let i = 0; i < width; i++) {
+    if (randomcandies[i] === "") {
+      const randomcandy = candies[Math.floor(Math.random() * candies.length)];
+      randomcandies[i] = randomcandy;
+    }
+  }
+  updateBoard();
 };
