@@ -1,10 +1,12 @@
 const board = document.querySelector(".board");
 const startBtn = document.querySelector(".start");
+const scoreElem = document.querySelector(".score");
 const width = 8;
 const candies = ["Blue", "Green", "Orange", "Purple", "Red", "Yellow"];
 let selectedcandy = null;
 let selectedcandyIndex = null;
 let randomcandies = [];
+let score = 0;
 
 window.onload = () => {
   startGame();
@@ -15,7 +17,7 @@ startBtn.addEventListener("click", () =>
     crushCandies();
     slideDown();
     generateNewCandies();
-  }, 400)
+  }, 300)
 );
 
 getRandomcandies = () => {
@@ -138,7 +140,9 @@ checkCombination = (matrix, isBlank) => {
     randomcandies[matrix[0]] = "";
     randomcandies[matrix[1]] = "";
     randomcandies[matrix[2]] = "";
+    score += 30;
     slideDown();
+    updateScore();
   }
 };
 
@@ -162,4 +166,8 @@ generateNewCandies = () => {
     }
   }
   updateBoard();
+};
+
+updateScore = () => {
+  scoreElem.textContent = `Score: ${score}`;
 };
