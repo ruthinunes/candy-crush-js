@@ -5,7 +5,13 @@ let selectedcandy = null;
 let selectedcandyIndex = null;
 let randomcandies = [];
 
-window.onload = () => startGame();
+window.onload = () => {
+  startGame();
+
+  window.setInterval(() => {
+    crushCandies();
+  }, 1000);
+};
 
 getRandomcandies = () => {
   for (let i = 0; i < width * width; i++) {
@@ -59,6 +65,7 @@ dragLeave = (index) => {
 };
 
 dragEnd = (index) => {
+  updateBoard();
   // cleaning variables
   selectedcandy = null;
   selectedcandyIndex = null;
@@ -75,6 +82,7 @@ dragDrop = (index) => {
       randomcandies[selectedcandyIndex] = randomcandies[index];
       randomcandies[index] = tempIndex;
 
+      crushCandies();
       updateBoard();
     }
   }
@@ -84,7 +92,42 @@ updateBoard = () => {
   const cards = document.querySelectorAll(".card");
   cards.forEach((card, index) => {
     const candy = randomcandies[index];
-    card.setAttribute("src", "./images/" + candy + ".png");
+
+    if (candy === "") {
+      card.setAttribute("src", "./images/blank.png");
+    } else {
+      card.setAttribute("src", "./images/" + candy + ".png");
+    }
     card.setAttribute("alt", candy);
   });
+};
+
+// Checking for matches
+crushCandies = () => {
+  crushThree();
+  // crushFour
+  // crushFive()
+};
+
+crushThree = () => {
+  for (i = 0; i <= 61; i++) {
+    const isBlank = randomcandies[i] === "";
+    let row = [i, i + 1, i + 2];
+    let col = [i, i + width, i + width * 2];
+    checkCombination(row, isBlank); // Verifica na linha
+    checkCombination(col, isBlank); // Verifica na coluna
+  }
+  updateBoard();
+};
+
+checkCombination = (matrix, isBlank) => {
+  let candy1 = randomcandies[matrix[0]];
+  let candy2 = randomcandies[matrix[1]];
+  let candy3 = randomcandies[matrix[2]];
+
+  if (candy1 === candy2 && candy2 === candy3 && !isBlank) {
+    randomcandies[matrix[0]] = "";
+    randomcandies[matrix[1]] = "";
+    randomcandies[matrix[2]] = "";
+  }
 };
