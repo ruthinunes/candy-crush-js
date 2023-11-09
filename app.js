@@ -1,4 +1,5 @@
 const board = document.querySelector(".board");
+const startBtn = document.querySelector(".start");
 const width = 8;
 const candies = ["Blue", "Green", "Orange", "Purple", "Red", "Yellow"];
 let selectedcandy = null;
@@ -7,11 +8,13 @@ let randomcandies = [];
 
 window.onload = () => {
   startGame();
+};
 
+startBtn.addEventListener("click", () =>
   window.setInterval(() => {
     crushCandies();
-  }, 1000);
-};
+  }, 300)
+);
 
 getRandomcandies = () => {
   for (let i = 0; i < width * width; i++) {
@@ -75,7 +78,10 @@ dragDrop = (index) => {
   if (selectedcandy !== null) {
     let validMoves = [index - 1, index - width, index + 1, index + width];
 
-    if (validMoves.includes(selectedcandyIndex)) {
+    if (
+      validMoves.includes(selectedcandyIndex) &&
+      randomcandies[index] !== ""
+    ) {
       // switch candies
       const tempIndex = randomcandies[selectedcandyIndex];
 
@@ -114,8 +120,9 @@ crushThree = () => {
     const isBlank = randomcandies[i] === "";
     let row = [i, i + 1, i + 2];
     let col = [i, i + width, i + width * 2];
-    checkCombination(row, isBlank); // Verifica na linha
-    checkCombination(col, isBlank); // Verifica na coluna
+
+    checkCombination(row, isBlank); // check row
+    checkCombination(col, isBlank); // check column
   }
   updateBoard();
 };
