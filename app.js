@@ -5,32 +5,28 @@ const width = 8;
 const candies = ["Blue", "Green", "Orange", "Purple", "Red", "Yellow"];
 let selectedcandy = null;
 let selectedcandyIndex = null;
-let randomcandies = [];
+let randomCandies = [];
+let gameStarted = false;
 let score = 0;
 
-window.onload = () => {
-  startGame();
-};
+startBtn.addEventListener("click", () => {
+  if (!gameStarted) {
+    startGame();
+  }
+  startBtn.disabled = true;
+});
 
-startBtn.addEventListener("click", () =>
-  window.setInterval(() => {
-    crushCandies();
-    slideDown();
-    generateNewCandies();
-  }, 300)
-);
-
-getRandomcandies = () => {
+getrandomCandies = () => {
   for (let i = 0; i < width * width; i++) {
     const randomcandy = candies[Math.floor(Math.random() * candies.length)];
-    randomcandies.push(randomcandy);
+    randomCandies.push(randomcandy);
   }
 };
 
 createBoard = () => {
-  getRandomcandies();
+  getrandomCandies();
 
-  randomcandies.forEach((candy, index) => {
+  randomCandies.forEach((candy, index) => {
     card = document.createElement("img");
     card.classList.add("card");
     card.setAttribute("id", index);
@@ -50,7 +46,13 @@ createBoard = () => {
 };
 
 startGame = () => {
+  gameStarted = true;
   createBoard();
+  window.setInterval(() => {
+    crushCandies();
+    slideDown();
+    generateNewCandies();
+  }, 300);
 };
 
 dragStart = (candy, index) => {
@@ -84,16 +86,22 @@ dragDrop = (index) => {
 
     if (
       validMoves.includes(selectedcandyIndex) &&
-      randomcandies[index] !== ""
+      randomCandies[index] !== ""
     ) {
-      // switch candies
-      const tempIndex = randomcandies[selectedcandyIndex];
+      // temporarily swap candies
+      const tempIndex = randomCandies[selectedcandyIndex];
+      randomCandies[selectedcandyIndex] = randomCandies[index];
+      randomCandies[index] = tempIndex;
 
-      randomcandies[selectedcandyIndex] = randomcandies[index];
-      randomcandies[index] = tempIndex;
-
-      crushCandies();
-      updateBoard();
+      // check if the swap results in a valid move
+      if (checkValidSlide()) {
+        crushCandies();
+        updateBoard();
+      } else {
+        // revert the swap if it's not a valid move
+        randomCandies[index] = randomCandies[selectedcandyIndex];
+        randomCandies[selectedcandyIndex] = tempIndex;
+      }
     }
   }
 };
@@ -101,7 +109,7 @@ dragDrop = (index) => {
 updateBoard = () => {
   const cards = document.querySelectorAll(".card");
   cards.forEach((card, index) => {
-    const candy = randomcandies[index];
+    const candy = randomCandies[index];
 
     if (candy === "") {
       card.setAttribute("src", "./images/blank.png");
@@ -121,7 +129,7 @@ crushCandies = () => {
 
 crushThree = () => {
   for (i = 0; i <= 61; i++) {
-    const isBlank = randomcandies[i] === "";
+    const isBlank = randomCandies[i] === "";
     let row = [i, i + 1, i + 2];
     let col = [i, i + width, i + width * 2];
 
@@ -132,14 +140,14 @@ crushThree = () => {
 };
 
 checkCombination = (matrix, isBlank) => {
-  let candy1 = randomcandies[matrix[0]];
-  let candy2 = randomcandies[matrix[1]];
-  let candy3 = randomcandies[matrix[2]];
+  let candy1 = randomCandies[matrix[0]];
+  let candy2 = randomCandies[matrix[1]];
+  let candy3 = randomCandies[matrix[2]];
 
   if (candy1 === candy2 && candy2 === candy3 && !isBlank) {
-    randomcandies[matrix[0]] = "";
-    randomcandies[matrix[1]] = "";
-    randomcandies[matrix[2]] = "";
+    randomCandies[matrix[0]] = "";
+    randomCandies[matrix[1]] = "";
+    randomCandies[matrix[2]] = "";
     score += 30;
     slideDown();
     updateScore();
@@ -148,10 +156,10 @@ checkCombination = (matrix, isBlank) => {
 
 slideDown = () => {
   for (let i = 0; i < width * width - width; i++) {
-    if (randomcandies[i + width] === "") {
-      const temp = randomcandies[i];
-      randomcandies[i] = randomcandies[i + width];
-      randomcandies[i + width] = temp;
+    if (randomCandies[i + width] === "") {
+      const temp = randomCandies[i];
+      randomCandies[i] = randomCandies[i + width];
+      randomCandies[i + width] = temp;
     }
   }
 
@@ -160,9 +168,9 @@ slideDown = () => {
 
 generateNewCandies = () => {
   for (let i = 0; i < width; i++) {
-    if (randomcandies[i] === "") {
+    if (randomCandies[i] === "") {
       const randomcandy = candies[Math.floor(Math.random() * candies.length)];
-      randomcandies[i] = randomcandy;
+      randomCandies[i] = randomcandy;
     }
   }
   updateBoard();
@@ -170,4 +178,33 @@ generateNewCandies = () => {
 
 updateScore = () => {
   scoreElem.textContent = `Score: ${score}`;
+};
+
+checkValidSlide = () => {
+
+  for (let i = 0; i < width * width; i++) {
+    if (i % width < width - 2) {
+      // check horizontal combinations
+      if (
+        randomCandies[i] !== "" &&
+        randomCandies[i] === randomCandies[i + 1] &&
+        randomCandies[i + 1] === randomCandies[i + 2]
+      ) {
+        return true;
+      }
+    }
+
+    if (i < width * (width - 2)) {
+      // check vertical combinations
+      if (
+        randomCandies[i] !== "" &&
+        randomCandies[i] === randomCandies[i + width] &&
+        randomCandies[i + width] === randomCandies[i + width * 2]
+      ) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 };
