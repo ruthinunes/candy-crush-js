@@ -146,37 +146,76 @@ checkValidSlide = () => {
   return false;
 };
 
-checkCombination = (matrix, isBlank) => {
-  let candy1 = randomCandies[matrix[0]];
-  let candy2 = randomCandies[matrix[1]];
-  let candy3 = randomCandies[matrix[2]];
+checkCombinationGeneric = (matrix) => {
+  let combinationLength = matrix.length;
+  let candiesToCheck = [];
 
-  if (candy1 === candy2 && candy2 === candy3 && !isBlank) {
-    randomCandies[matrix[0]] = "";
-    randomCandies[matrix[1]] = "";
-    randomCandies[matrix[2]] = "";
+  for (let i = 0; i < combinationLength; i++) {
+    candiesToCheck.push(randomCandies[matrix[i]]);
+  }
+
+  if (isCombinationValid(candiesToCheck)) {
+    for (let i = 0; i < combinationLength; i++) {
+      randomCandies[matrix[i]] = "";
+    }
     score += 30;
     slideDown();
     updateScore();
   }
 };
 
+isCombinationValid = (candiesToCheck) => {
+  let isValid = true;
+  const referenceCandy = candiesToCheck[0];
+
+  for (let i = 0; i < candiesToCheck.length; i++) {
+    let candy = candiesToCheck[i];
+
+    if (candy !== referenceCandy) {
+      isValid = false;
+      break;
+    }
+  }
+  return isValid;
+};
+
 crushThree = () => {
   for (i = 0; i <= 61; i++) {
-    const isBlank = randomCandies[i] === "";
     let row = [i, i + 1, i + 2];
     let col = [i, i + width, i + width * 2];
 
-    checkCombination(row, isBlank); // check row
-    checkCombination(col, isBlank); // check column
+    checkCombinationGeneric(row);
+    checkCombinationGeneric(col);
+  }
+  updateBoard();
+};
+
+crushFour = () => {
+  for (i = 0; i <= 60; i++) {
+    let row = [i, i + 1, i + 2, i + 3];
+    let col = [i, i + width, i + width * 2, i + width * 3];
+
+    checkCombinationGeneric(row);
+    checkCombinationGeneric(col);
+  }
+  updateBoard();
+};
+
+crushFive = () => {
+  for (i = 0; i <= 59; i++) {
+    let row = [i, i + 1, i + 2, i + 3, i + 4];
+    let col = [i, i + width, i + width * 2, i + width * 3, i + width * 4];
+
+    checkCombinationGeneric(row);
+    checkCombinationGeneric(col);
   }
   updateBoard();
 };
 
 crushCandies = () => {
+  crushFive();
+  crushFour();
   crushThree();
-  // crushFour
-  // crushFive()
 };
 
 generateNewCandies = () => {
