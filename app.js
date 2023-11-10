@@ -37,10 +37,10 @@ createBoard = () => {
 
     // Event listeners for cards
     card.addEventListener("dragstart", () => dragStart(candy, index));
-    card.addEventListener("dragover", (e) => dragOver(index, e));
-    card.addEventListener("dragenter", (e) => dragEnter(index, e));
-    card.addEventListener("dragleave", () => dragLeave(index));
-    card.addEventListener("dragend", () => dragEnd(index));
+    card.addEventListener("dragover", (e) => dragOver(e));
+    card.addEventListener("dragenter", (e) => dragEnter(e));
+    card.addEventListener("dragleave", () => dragLeave());
+    card.addEventListener("dragend", () => dragEnd());
     card.addEventListener("drop", () => dragDrop(index));
   });
 };
@@ -60,20 +60,17 @@ dragStart = (candy, index) => {
   selectedcandy = candy;
 };
 
-dragOver = (index, e) => {
-  e.preventDefault();
-  // console.log(index, "dragOver");
-};
-
-dragEnter = (index, e) => {
+dragOver = (e) => {
   e.preventDefault();
 };
 
-dragLeave = (index) => {
-  // console.log(index, "dragLeave");
+dragEnter = (e) => {
+  e.preventDefault();
 };
 
-dragEnd = (index) => {
+dragLeave = () => {};
+
+dragEnd = () => {
   updateBoard();
   // cleaning variables
   selectedcandy = null;
@@ -121,67 +118,7 @@ updateBoard = () => {
 };
 
 // Checking for matches
-crushCandies = () => {
-  crushThree();
-  // crushFour
-  // crushFive()
-};
-
-crushThree = () => {
-  for (i = 0; i <= 61; i++) {
-    const isBlank = randomCandies[i] === "";
-    let row = [i, i + 1, i + 2];
-    let col = [i, i + width, i + width * 2];
-
-    checkCombination(row, isBlank); // check row
-    checkCombination(col, isBlank); // check column
-  }
-  updateBoard();
-};
-
-checkCombination = (matrix, isBlank) => {
-  let candy1 = randomCandies[matrix[0]];
-  let candy2 = randomCandies[matrix[1]];
-  let candy3 = randomCandies[matrix[2]];
-
-  if (candy1 === candy2 && candy2 === candy3 && !isBlank) {
-    randomCandies[matrix[0]] = "";
-    randomCandies[matrix[1]] = "";
-    randomCandies[matrix[2]] = "";
-    score += 30;
-    slideDown();
-    updateScore();
-  }
-};
-
-slideDown = () => {
-  for (let i = 0; i < width * width - width; i++) {
-    if (randomCandies[i + width] === "") {
-      const temp = randomCandies[i];
-      randomCandies[i] = randomCandies[i + width];
-      randomCandies[i + width] = temp;
-    }
-  }
-
-  updateBoard();
-};
-
-generateNewCandies = () => {
-  for (let i = 0; i < width; i++) {
-    if (randomCandies[i] === "") {
-      const randomcandy = candies[Math.floor(Math.random() * candies.length)];
-      randomCandies[i] = randomcandy;
-    }
-  }
-  updateBoard();
-};
-
-updateScore = () => {
-  scoreElem.textContent = `Score: ${score}`;
-};
-
 checkValidSlide = () => {
-
   for (let i = 0; i < width * width; i++) {
     if (i % width < width - 2) {
       // check horizontal combinations
@@ -207,4 +144,63 @@ checkValidSlide = () => {
   }
 
   return false;
+};
+
+checkCombination = (matrix, isBlank) => {
+  let candy1 = randomCandies[matrix[0]];
+  let candy2 = randomCandies[matrix[1]];
+  let candy3 = randomCandies[matrix[2]];
+
+  if (candy1 === candy2 && candy2 === candy3 && !isBlank) {
+    randomCandies[matrix[0]] = "";
+    randomCandies[matrix[1]] = "";
+    randomCandies[matrix[2]] = "";
+    score += 30;
+    slideDown();
+    updateScore();
+  }
+};
+
+crushThree = () => {
+  for (i = 0; i <= 61; i++) {
+    const isBlank = randomCandies[i] === "";
+    let row = [i, i + 1, i + 2];
+    let col = [i, i + width, i + width * 2];
+
+    checkCombination(row, isBlank); // check row
+    checkCombination(col, isBlank); // check column
+  }
+  updateBoard();
+};
+
+crushCandies = () => {
+  crushThree();
+  // crushFour
+  // crushFive()
+};
+
+generateNewCandies = () => {
+  for (let i = 0; i < width; i++) {
+    if (randomCandies[i] === "") {
+      const randomcandy = candies[Math.floor(Math.random() * candies.length)];
+      randomCandies[i] = randomcandy;
+    }
+  }
+  updateBoard();
+};
+
+slideDown = () => {
+  for (let i = 0; i < width * width - width; i++) {
+    if (randomCandies[i + width] === "") {
+      const temp = randomCandies[i];
+      randomCandies[i] = randomCandies[i + width];
+      randomCandies[i + width] = temp;
+    }
+  }
+
+  updateBoard();
+};
+
+updateScore = () => {
+  scoreElem.textContent = `Score: ${score}`;
 };
